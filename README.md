@@ -2,6 +2,15 @@
 
 Matlab-Abaqus pipeline to model embedded fibers in to hyperelastic solid base material (large deformations). Based on the work by Steinbrecher et al., _A mortar-type finite element approach for embedding 1D beams into 3D solid volumes_, 2020.
 
+## Pre-requisites
+
+Commercial software
+* Abaqus, Standard 
+* Matlab
+
+For post-processing and visualization
+* Paraview
+
 ## Intro
 
 We implement and make publicly available a mortar-type FE method for embedding beams in to 3D solid volumes, originally developed by Steinbrecher et al., 2020. 
@@ -23,3 +32,28 @@ Results of every converged step in *.vtk file format containing:
 * Constraing violation metric.
 
 Additionally, the pipeline outputs a Matlab structure, containing the components of strain energy, for both solid and fibers.
+
+## Tutorial
+
+First, open the mainm code.
+
+```matlab
+grunt.initConfig({
+  assemble: {
+    options: {
+      assets: 'docs/assets',
+      data: 'src/data/*.{json,yml}',
+      helpers: 'src/custom-helpers.js',
+      partials: ['src/partials/**/*.{hbs,md}']
+    },
+    pages: {
+      options: {
+        layout: 'default.hbs'
+      },
+      files: {
+        './': ['src/templates/pages/index.hbs']
+      }
+    }
+  }
+};
+```
