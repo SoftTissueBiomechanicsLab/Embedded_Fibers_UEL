@@ -15,12 +15,12 @@ For post-processing and visualization
 
 ## Intro
 
-We implement and make publicly available a mortar-type FE method for embedding beams in to 3D solid volumes, originally developed by Steinbrecher et al., 2020. 
+We implement and make publicly available a mortar-type FE method for embedding beams in 3D solid volumes, originally developed by Steinbrecher et al., 2020. 
 
 The pipeline receives as **input**:
 * Fiber structure (segment endpoints)
 * Fiber geometry (straight, helix, sinusoidal undulations)
-* Solid geometry (rectangular dimensions W,D,H in x,y,z axes, respecctively)
+* Solid geometry (rectangular dimensions W,D,H in x,y,z axes, respectively)
 * Material parameters (solid, fiber, penalty parameter)
 * Segmentation parameters (number of Gauss points, fiber resolution, plotting arguments)
 * Boundary conditions (simple shear, uniaxial extension)
@@ -29,18 +29,18 @@ The pipeline receives as **input**:
 **Output**:
 Results of every converged step in *.vtk file format containing:
 * Solid stress
-* Fiber strain and cross section forces and moments.
+* Fiber strain and cross-section forces and moments.
 * Interface line load between solid and the fibers
-* Constraing violation metric.
+* Constraining violation metric.
 
-Additionally, the pipeline outputs a Matlab structure, containing the components of strain energy, for both solid and fibers.
+Additionally, the pipeline outputs a Matlab structure containing the components of strain energy for both solids and fibers.
 
 ## Tutorial - Single Fiber
 
-Everything runs through the main script "MainSingleFiber.m". First section of the script includes any settings/options needed to run the pipeline.
+Everything runs through the main script "MainSingleFiber.m". The first section of the script includes any settings/options needed to run the pipeline.
 Only this part of the script should be modified.
 
-First part of settings is the configuration options to define local paths and filenames.
+The first part of the settings is the configuration options to define local paths and filenames.
 
 ```matlab
 %------- CONFIGURATION OPTIONS --------------------------------------------
@@ -51,7 +51,7 @@ MatrixPaths = '/home/datastore/Sotiris/'; % Directory to save matrix *.txt
 ```
 
 Next, the geometry and discretization options. Please note that at this point, the pipeline supports only *regular solid domains* (rectangular prisms).
-The fibers are defined by providing the *endpoints* and then the undulation parameters, if any. Currently, are supported helix beams and sinusoidal undulations in two axes.
+The fibers are defined by providing the *endpoints* and then the undulation parameters, if any. Currently, only helix beams and sinusoidal undulations in two axes are supported.
 
 ```matlab
 %------- GEOMETRY OPTIONS -------------------------------------------------
@@ -62,7 +62,7 @@ H = 1;  % Global Z-direction
 
 % Beam/Fiber Geometry
 r0 = [W/2, 0.05*D, H/2]; % Start point
-rf = [W/2, 0.95*D, H/2]; % End point
+rf = [W/2, 0.95*D, H/2]; % Endpoint
 
 % Discretization
 hsolid = 1/18; % Solid element length
@@ -76,8 +76,8 @@ wx=[]; wy=[];  % Unudations frequency (applicable only for 'sin_und'
 nloops=3; % Complete loops (only for 'helix')
 ```
 
-The next set of options, is related to constitutive modeling of the embedded fibers. This is where the material constants are defined, the beam order and the penalty parameter, as follows.
-Please note that we consider in this example only nearly-incompressible neo-Hookean. However, the pipeline can be very easily modified to acccomodate any hyperelastic material model available in Abaqus.
+The next set of options is related to the constitutive modeling of the embedded fibers. This is where the material constants, beam order, and penalty parameter are defined as follows.
+Please note that we consider in this example only a nearly-incompressible neo-Hookean material. However, the pipeline can be very easily modified to accommodate any hyperelastic material model available in Abaqus.
 
 ```matlab
 %------- CONSTITUTIVE MODEL OPTIONS ---------------------------------------
@@ -97,12 +97,12 @@ Matl = 'NHK'; %  NHK (Neo Hookean)
 kmurat = 1e3; % Bulk-to-shear modulus ratio (nearly incompressible)
 ```
 
-Finally, please enter the boundary value problem options (displacement boundary conditions) and the Abaqus solver settings, as follows
+Finally, please enter the boundary value problem options (displacement boundary conditions) and the Abaqus solver settings as follows
 
 ```matlab
 %------- BVP AND SOLVER OPTIONS -------------------------------------------
 % Displacement Mode
-RPL = 'UEy'; % Displacement mode: Uniaxial in x,y or z: UEx, UEy, UEz; SimpleShear: SSxy, SSyx, ... etc.
+RPL = 'UEy'; % Displacement mode: Uniaxial in x,y, or z: UEx, UEy, UEz; SimpleShear: SSxy, SSyx, ... etc.
 X_disp = 2; % Prescribed displacement
 
 % Abaqus Solver Options Steps
@@ -110,16 +110,16 @@ nSteps = 1;
 SolverOptions.InitStep = 1e-2;% Initial step
 SolverOptions.minStep = 1e-4; % Min step
 SolverOptions.maxStep = 1e-2; % Max step
-SolverOptions.n_incr = 100; % Number of increments to ouput results
+SolverOptions.n_incr = 100; % Number of increments to output results
 SolverOptions.STBL = true; % Stabilization boolean
 SolverOptions.STBLfac = 2e-4; % If on, stabilization factor
 ```
 
-The last set of options should not be significant or be changed. Feel free to reach out to the author for more details. The most useful of them is
+The last set of options should not be changed. Feel free to reach out to the author for more details. The most useful of them is
 ```matlab
 ReDoDiscretization = true; % Boolean to re-calculate coupling matrices
 ```
-which dictates whether the pipeline should calculate again the coupling matrices, or just load the ones from previous run. Please note that the coupling matrices depend only on the geometry and the discretization parameters.
+which dictates whether the pipeline should calculate the coupling matrices again or just load the ones from the previous run. Please note that the coupling matrices depend only on the geometry and the discretization parameters.
 
 
 ## Tutorial - Networks
@@ -127,14 +127,14 @@ which dictates whether the pipeline should calculate again the coupling matrices
 ![alt text](./Images/Networks.png)
 
 In this case, everything runs through the main script "MainNetworks.m".
-The only part that needs to be customized for each network each the section of the beam geometry.
-It receives as input a matrix containing the endpoints for each fiber. As it loops through each fiber, it assigns a "curve type". Note that introducting undulations to the initially straight fibers, may cause some of them to lie outside the solid domain.
-In that case, the user can exclude those segments, by specifying their IDs at the "exclude_branches" variable, or either assign a smaller undulations amplitude.
+The only part that needs to be customized for each network is the section of the beam geometry.
+It receives as input a matrix containing the endpoints for each fiber. As it loops through each fiber, it assigns a "curve type." Note that introducing undulations to the initially straight fibers may cause some of them to lie outside the solid domain.
+In that case, the user can exclude those segments by specifying their IDs through the "exclude_branches" variable or either assign a smaller undulations amplitude.
 
 ```matlab
 %------- GEOMETRY OPTIONS -------------------------------------------------
 % Solid Domain Dimensions
-Lm = 26; % Cube scale for solid domain
+Lm = 26; % Cube scale for the solid domain
 W = Lm;  % Global X-direction
 D = Lm;  % Global Y-direction
 H = Lm;  % Global Z-direction
@@ -175,9 +175,9 @@ end
 
 ```
 
-## Post Processing Results
+## Post-Processing Results
 
-The pipeline generates for each substep, two groups *.vtk files containing all important scalar, vector and tensor fields. 
+For each substep the pipeline generates two groups of *.vtk files containing all important scalar, vector, and tensor fields. 
 * B_{JobNum}_n: **Beam** files for Job= JobNum at substep "n"
 * S_{JobNum}_n: **Solid** files for Job= JobNum at substep "n"
 
@@ -185,25 +185,25 @@ Each **Beam** file contains the following output:
 * U: Displacement field
 * GC: Coupling constraint violation (vector field -relative solid-beam displacement)
 * LM: Lagrange multiplier field (vector field - interface load)
-* SE, SK, SF, SM: Cross section strain, curvature, forces and moments (per Abaqus Definition)
+* SE, SK, SF, SM: Cross-section strain, curvature, forces, and moments (per Abaqus definition)
 
 Each **Solid** file contains the following output:
 * U: Displacement field
 * S: Cauchy stress tensor field
 
-Recommended steps for post processing in Paraview:
+Recommended steps for post-processing in Paraview:
 * Load both series of **B** and **S** files
-* Transluscent solid elements: change the opacity of the solid domain to any value less than 1.
-* Smoothen the solid surfaces: apply the fiters in following order: 1) Extract Surface. 2) Generate Surface Normals. 3) CellDatatoPointData
+* Translucent solid elements: change the opacity of the solid domain to any value less than 1.
+* Smoothen the solid surfaces: apply the filters in order 1) Extract Surface. 2) Generate Surface Normals. 3) CellDatatoPointData
 * Render the 3D profile of the fibers by applying the "Tube" filter.
 
 Additionally, the pipeline exports a Matlab structure in the local Abaqus Work Directory named "{BC}_AbaqusData.mat", where "BC" is a string representing the custom Boundary conditions.
 In this structure, the user can find the following variables/quantities:
 * RFdisp, RF: Rigid (prescribed) displacement and Reaction force, respectively (vector, in the Global coordinate system)
-* ALLSE, ALLSD, ALLWK, ALLIE: Energy quantities as specified in Abaqus manual.
-* NRGS: A substructure containing just the total beam strain energies: membrane (UmL), bending (Ub1L, Ub2) in the two cross section axes, shear (Us1L, Us2L) and torsional (UtrL)
+* ALLSE, ALLSD, ALLWK, ALLIE: Energy quantities as specified in the Abaqus manual.
+* NRGS: A substructure containing just the total beam strain energies: membrane (UmL), bending (Ub1L, Ub2) in the two cross-section axes, shear (Us1L, Us2L), and torsional (UtrL)
 * J: The determinant of the deformation gradient for each solid element (for incompressibility considerations).
 
 ## Troubleshoot
 
-For any inquiries, additional help, customization or any other problem/concern/suggestions please you're more than welcome to reach out via email!
+For any inquiries, additional help, customization, or any other problem/concern/suggestions, you're more than welcome to reach out via email!
