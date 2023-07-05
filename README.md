@@ -102,7 +102,7 @@ Finally, please enter the boundary value problem options (displacement boundary 
 ```matlab
 %------- BVP AND SOLVER OPTIONS -------------------------------------------
 % Displacement Mode
-RPL = 'SSxy'; % Displacement mode
+RPL = 'UEy'; % Displacement mode: Uniaxial in x,y or z: UEx, UEy, UEz; SimpleShear: SSxy, SSyx, ... etc.
 X_disp = Lm; % Prescribed displacement
 
 % Abaqus Solver Options Steps
