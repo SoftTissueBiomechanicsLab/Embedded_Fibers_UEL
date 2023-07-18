@@ -71,7 +71,7 @@ SolverOptions.STBLfac = 2e-4; % If on, stabilization factor
 %------- ADVANCED PIPELINE SETTINGS ---------------------------------------
 ReDoDiscretization = true; % Boolean to re-calculate coupling matrices
 LMOrder = BeamOrder; % Lagrange Multiplier Order, equal to beam order
-s_resol = 17; % Segmentation resolution per beam element
+s_resol = 16; % Segmentation resolution per beam element
 COLim = 1e-7; % Cut off limit for  stiffness matrix entries
 n_group = 3; % Group DOFs at super element
 plot_segmentation  = false; % Boolean to inspect segmentation
