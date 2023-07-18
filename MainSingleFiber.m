@@ -22,8 +22,8 @@ r0 = [W/2, 0.05*D, H/2]; % Start point
 rf = [W/2, 0.95*D, H/2]; % End point
 
 % Discretization
-hsolid = 1/15; % Solid element length
-hbeam = 2.0*hsolid; % Beam element length
+hsolid = 1/17; % Solid element length
+hbeam = 1.5*hsolid; % Beam element length
 dist_tol = 1e-8; % Distance tolerance for merging beam nodes
 
 % Introduce Undulations
