@@ -389,13 +389,13 @@ cmd_str1 = ['cd ',full_workdir];
 cmd_str2 = ['abaqus job=Model',IDStr,RPL,' user=UEL',IDStr,'.f double cpus=' num2str(num_threads), ' int > NUL ask_delete=OFF '];
 frame_string = sprintf('%d,',[0:1:SolverOptions.n_incr+1]);
 frame_string = frame_string(1:end-1);
-cmd_str4 = ['abaqus odbreport mode=csv odb=Model',IDStr,RPL,' job=Model',IDStr,RPL,'_Fields  field=U,S,SE,SF,SM,SK,RF frame=',frame_string,' > NUL int'];
-cmd_str5 = ['abaqus odbreport mode=csv odb=Model',IDStr,RPL,' job=Model',IDStr,RPL,'_History  history=ALLSE,ALLWK,ALLSD,ALLIE  > NUL int'];
+cmd_str4 = ['abaqus odbreport mode=csv odb=Model',IDStr,RPL,' job=Model',IDStr,RPL,'_Fields  field=U,S,SE,SF,SM,SK,RF frame=',frame_string,' > int'];
+cmd_str5 = ['abaqus odbreport mode=csv odb=Model',IDStr,RPL,' job=Model',IDStr,RPL,'_History  history=ALLSE,ALLWK,ALLSD,ALLIE  > int'];
 
 
 tic
 fprintf('STEP 9: ABAQUS running.')
-[statusRun, blabla] = system([cmd_str1,'; ',cmd_str2]);
+[statusRun, blabla] = system([cmd_str1,'& ',cmd_str2]);
 if statusRun ~= 0
     fprintf('Abaqus simulation failed.')
 end
@@ -403,8 +403,8 @@ fprintf('...COMPLETE(Runtime %.1fs).\n',toc)
 
 tic
 fprintf('STEP 10: Generating ABAQUS reports.')
-[statusRun, blabla] = system([cmd_str1,'; ',cmd_str4]);
-[statusRun, blabla] = system([cmd_str1,'; ',cmd_str5]);
+[statusRun, blabla] = system([cmd_str1,'& ',cmd_str4]);
+[statusRun, blabla] = system([cmd_str1,'& ',cmd_str5]);
 fprintf('...COMPLETE(Runtime %.1fs).\n',toc)
 
 
